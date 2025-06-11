@@ -1,0 +1,20 @@
+@if(showAlert){
+<div class="alert" [class]="{
+  'alert-error': alertType === 'error',
+  'alert-success': alertType === 'success'
+}">
+  {{ alertMessage }}
+</div>
+}
+
+<div class="min-h-screen bg-gray-50 dark:bg-zinc-900 mt-4">
+  <app-navbar [isSidebarOpen]="togglerState" (toggleState)="onToggleState($event)" [userDetails]="currentUser"
+    [logout]="logout.bind(this)"></app-navbar>
+  <app-sidebar [isOpen]="togglerState" [userDetails]="currentUser" [queryPath]="currentUser?.role"
+    [examLength]="stats.totalExams" [logout]="logout.bind(this)" (closeSidebar)="onToggleState(false)"></app-sidebar>
+  <div class="p-4" [class.ml-64]="togglerState">
+    <div class="p-4 mt-14 overflow-x-hidden">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

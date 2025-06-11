@@ -1,0 +1,132 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6">
+  <h1 class="text-3xl font-semibold text-zinc-900 mb-4 dark:text-white tracking-tight">
+    Profile Settings
+  </h1>
+  <div class="flex flex-col items-center lg:items-stretch  gap-6 lg:flex-row">
+    <div
+      class="flex flex-col w-full bg-zinc-900 border border-zinc-300/30 rounded-lg shadow-lg p-4 sm:p-6 md:max-w-xl lg:max-w-2xl">
+
+      <div class="flex flex-col mb-6 sm:mb-8">
+        <h2 class="text-lg sm:text-xl font-semibold text-gray-200 mb-3 sm:mb-4">Your Profile</h2>
+
+        <div class="flex flex-col mb-4 sm:mb-6">
+          <label class="block text-sm font-medium text-gray-300 mb-1 sm:mb-2">Profile Image</label>
+          <p class="text-xs text-gray-400 mb-2 sm:mb-3">Min 400×400px, PNG or JPEG</p>
+
+          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+            <label for="avatar-upload"
+              class="relative flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-zinc-800 overflow-hidden cursor-pointer focus:ring-4 focus:ring-gray-300 group">
+              <img [src]="avatarPreview || getAvatarUrl()" alt="Current profile"
+                class="absolute inset-0 w-full h-full object-cover">
+              <input id="avatar-upload" type="file" accept="image/*"
+                class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" (change)="onFileSelected($event)">
+            </label>
+            <label for="avatar-upload"
+              class="flex items-center justify-center text-white bg-zinc-800 hover:bg-zinc-600 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium rounded-lg focus:ring-4 focus:ring-gray-300 transition cursor-pointer">
+              <span *ngIf="!isUploading">Change Photo</span>
+              <span *ngIf="isUploading">Uploading...</span>
+            </label>
+          </div>
+        </div>
+
+        <hr class="my-4 sm:my-6 border-zinc-800">
+
+        <div class="flex flex-col space-y-3 sm:space-y-4">
+          <div class="flex flex-col">
+            <label class="block text-sm font-medium text-gray-300 mb-1 sm:mb-2">Username</label>
+            <input type="text" [(ngModel)]="userDetails.name"
+              class="flex-1 bg-zinc-800 border border-zinc-600 text-white text-sm rounded-lg focus:ring-4 focus:ring-gray-300 block w-full p-2 sm:p-2.5 placeholder-gray-400">
+          </div>
+          <div class="flex flex-col">
+            <label class="block text-sm font-medium text-gray-300 mb-1 sm:mb-2">Email address</label>
+            <input type="email" [(ngModel)]="userDetails.email"
+              class="flex-1 bg-zinc-800 border border-zinc-600 text-gray-400 text-sm rounded-lg block w-full p-2 sm:p-2.5 cursor-not-allowed focus:ring-4 focus:ring-gray-300"
+              disabled>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" (click)="saveChanges()" [disabled]="isUploading"
+        class="cursor-pointer flex items-center justify-center text-white bg-zinc-800 hover:bg-zinc-600 px-4 py-2 sm:px-5 sm:py-2.5 text-sm font-medium rounded-lg w-full focus:ring-4 focus:ring-gray-300 transition disabled:opacity-50 disabled:cursor-not-allowed">
+        <span *ngIf="!isUploading">Save Changes</span>
+        <span *ngIf="isUploading" class="flex items-center justify-center">
+          <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Saving...
+        </span>
+      </button>
+    </div>
+
+    <div
+      class="flex flex-col w-full bg-zinc-900 border border-red-500/30 rounded-lg shadow-lg p-4 sm:p-6 md:max-w-xl lg:max-w-2xl">
+      <h2 class="text-xl font-semibold text-red-400 mb-4">Delete Account</h2>
+
+      <div class="space-y-6">
+        <div class="bg-zinc-800/50 border border-red-900/30 rounded-lg p-4 flex items-start gap-3">
+          <svg class="flex-shrink-0 w-5 h-5 text-red-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+            </path>
+          </svg>
+          <div class="flex flex-col">
+            <h3 class="text-sm font-medium text-red-300">Warning: Account Deletion</h3>
+            <p class="text-xs text-gray-400 mt-1">This action is permanent and cannot be undone. All your data will be
+              permanently erased.</p>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Confirm your email</label>
+            <input [(ngModel)]="deleteData.email" type="email" placeholder="Your email address"
+              [class.border-red-500]="deleteData.email && deleteData.email !== userDetails?.email"
+              class="w-full bg-zinc-800 border border-zinc-600 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-red-500">
+            <p *ngIf="deleteData.email && deleteData.email !== userDetails?.email" class="mt-1 text-xs text-red-500">
+              Email
+              does not match your account email</p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Type "DELETE" to confirm</label>
+            <input [(ngModel)]="deleteData.confirmation" type="text" placeholder="Type DELETE to confirm"
+              [class.border-red-500]="deleteData.confirmation && deleteData.confirmation.toUpperCase() !== 'DELETE'"
+              class="w-full bg-zinc-800 border border-zinc-600 text-white rounded-lg p-2.5 uppercase tracking-wide focus:ring-2 focus:ring-red-500">
+            <p *ngIf="deleteData.confirmation && deleteData.confirmation.toUpperCase() !== 'DELETE'"
+              class="mt-1 text-xs text-red-500">Please type DELETE in uppercase</p>
+          </div>
+        </div>
+
+        <div class="flex gap-3">
+          <button (click)="deleteAccount()" [disabled]="!canDelete() || isDeleting"
+            class="cursor-pointer flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-2.5 px-4 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed">
+            <span *ngIf="!isDeleting">Delete Account</span>
+            <span *ngIf="isDeleting" class="flex items-center justify-center">
+              <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                </path>
+              </svg>
+              Deleting...
+            </span>
+          </button>
+
+          <button (click)="resetDeleteForm()"
+            class="cursor-pointer flex-1 bg-zinc-800 hover:bg-zinc-700 text-gray-300 font-medium py-2.5 px-4 rounded-lg transition">
+            Reset
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Account Confirmation Modal -->
+  <app-confirm-modal [isOpen]="showDeleteConfirmation" [isLoading]="isDeleting" (confirm)="confirmDelete()"
+    (cancel)="cancelDelete()" title="Delete Account"
+    message="Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently erased."
+    confirmText="Delete Account" cancelText="Cancel">
+  </app-confirm-modal>
+</div>

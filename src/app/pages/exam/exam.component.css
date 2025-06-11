@@ -1,0 +1,132 @@
+.exam-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.loading-state, .error-state, .exam-preview, .exam-submitted {
+  text-align: center;
+  padding: 40px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.error-state {
+  color: #d32f2f;
+}
+
+button:disabled {
+  background: #9e9e9e;
+  cursor: not-allowed;
+}
+
+.exam-in-progress {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.exam-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.timer {
+  font-size: 18px;
+  font-weight: bold;
+  color: #d32f2f;
+}
+
+.question-container {
+  margin-bottom: 30px;
+}
+
+.choices {
+  margin-top: 15px;
+}
+
+.choice {
+  padding: 10px 15px;
+  margin: 5px 0;
+  background: #f5f5f5;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.choice.selected {
+  background: #3f51b5;
+  color: white;
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.question-progress {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.question-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.question-dot.answered {
+  background: #4caf50;
+}
+
+.question-dot.current {
+  border: 2px solid #3f51b5;
+}
+
+/* Focus Mode Styles */
+.focus-mode-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+}
+
+.focus-mode-content {
+  max-width: 500px;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.focus-mode-content h2 {
+  color: #ff9800;
+  margin-bottom: 20px;
+}
+
+body.focus-mode {
+  overflow: hidden;
+}
+
+body.focus-mode header,
+body.focus-mode footer {
+  display: none !important;
+}

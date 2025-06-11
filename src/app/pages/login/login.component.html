@@ -1,0 +1,220 @@
+<div
+  class="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50 dark:from-zinc-900 dark:via-zinc-800 dark:to-purple-900/20">
+  <div class="max-w-md mx-auto px-4 py-12 sm:px-6">
+    <!-- Header with Logo -->
+    <div class="relative mb-8">
+      <!-- Decorative Elements -->
+      <div class="absolute -top-4 -left-4 w-32 h-32 bg-purple-200 dark:bg-purple-800/30 rounded-full blur-3xl"></div>
+      <div class="absolute -bottom-4 -right-4 w-32 h-32 bg-blue-200 dark:bg-blue-800/30 rounded-full blur-3xl"></div>
+      <div
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-purple-200 to-blue-200 dark:from-purple-800/20 dark:to-blue-800/20 rounded-full blur-3xl">
+      </div>
+
+      <!-- Main Content -->
+      <div class="relative">
+        <!-- Brand Name with Icon -->
+         <div class="flex items-center justify-center gap-4 mb-5">
+            <img class="w-18 h-18 flex items-center justify-center transform hover:scale-105 transition-transform duration-200" src="logo.png" alt="TolabExams logo">
+          <h2
+            class="text-4xl font-semibold text-transparent bg-clip-text bg-gradient-to-b from-gray-50 to-purple-500 tracking-tight mt-3">
+            TolabExams
+          </h2>
+        </div>
+
+        <!-- Welcome Section -->
+        <div class="text-center space-y-6">
+          <div
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-100 dark:bg-purple-500/40 text-purple-600 dark:text-purple-300 text-sm font-medium shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+            </svg>
+            Welcome Back
+          </div>
+          <div class="space-y-3">
+            <h1 class="text-3xl font-semibold text-zinc-900 dark:text-white tracking-tight">
+              Sign in to your account
+            </h1>
+            <p class="text-zinc-600 dark:text-zinc-400 text-base max-w-md mx-auto leading-relaxed">
+              Access your dashboard to manage exams and track student progress. Welcome back to our learning community.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Alert Component -->
+    <div *ngIf="showAlert"
+      class="mb-6 rounded-xl p-4 shadow-lg transform transition-all duration-300 ease-in-out animate-[slideDown_0.3s_ease-out]"
+      [ngClass]="{
+        'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800': alertType === 'error',
+        'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800': alertType === 'success'
+      }">
+      <div class="flex items-start gap-3">
+        <!-- Error Icon -->
+        @if (alertType === 'error') {
+        <div class="flex-shrink-0">
+          <svg class="w-5 h-5 text-red-500 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        }
+        <!-- Success Icon -->
+        @if (alertType === 'success') {
+        <div class="flex-shrink-0">
+          <svg class="w-5 h-5 text-green-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke-width="2" class="animate-[draw_0.5s_ease-in-out]" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 12l3 3 5-5"
+              class="animate-[draw_0.5s_ease-in-out]" />
+          </svg>
+        </div>
+        }
+        <!-- Alert Message -->
+        <div class="flex-1">
+          <p class="text-sm font-medium" [ngClass]="{
+            'text-red-800 dark:text-red-200': alertType === 'error',
+            'text-green-800 dark:text-green-200': alertType === 'success'
+          }">
+            {{ alertMessage }}
+          </p>
+        </div>
+        <!-- Close Button -->
+        <button (click)="showAlert = false"
+          class="flex-shrink-0 text-zinc-400 hover:text-zinc-500 dark:text-zinc-500 dark:hover:text-zinc-400 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Login Form Card -->
+    <div
+      class="bg-white dark:bg-zinc-800 rounded-2xl shadow-xl p-8 border border-zinc-200 dark:border-zinc-700 backdrop-blur-sm">
+      <form [formGroup]="loginForm" (submit)="login()" class="space-y-6">
+        <!-- Email Input -->
+        <div class="group">
+          <label for="email"
+            class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2 group-focus-within:text-purple-600 dark:group-focus-within:text-purple-400 transition-colors">
+            Email
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="w-5 h-5 text-zinc-400 group-focus-within:text-purple-500" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <input type="email" formControlName="email" id="email"
+              class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200"
+              placeholder="name@company.com" />
+          </div>
+          @if (getEmail?.touched) {
+          <div class="mt-2 text-sm flex items-center gap-1" [ngClass]="{
+            'text-red-500': getEmail?.invalid,
+            'text-green-500': getEmail?.valid
+          }">
+            @if (getEmail?.invalid) {
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            @if (getEmail?.hasError('required')) {
+            Email is required
+            } @if (getEmail?.hasError('pattern')) {
+            Enter a valid email address
+            }
+            } @if (getEmail?.valid) {
+            <svg class="w-4 h-4 text-green-500 animate-[bounce_0.5s_ease-in-out]" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke-width="2" class="animate-[draw_0.5s_ease-in-out]" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 12l3 3 5-5"
+                class="animate-[draw_0.5s_ease-in-out]" />
+            </svg>
+            Email is valid
+            }
+          </div>
+          }
+        </div>
+
+        <!-- Password Input -->
+        <div class="group">
+          <label for="password"
+            class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2 group-focus-within:text-purple-600 dark:group-focus-within:text-purple-400 transition-colors">
+            Password
+          </label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="w-5 h-5 text-zinc-400 group-focus-within:text-purple-500" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <input type="password" formControlName="password" id="password"
+              class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200"
+              placeholder="••••••••" />
+          </div>
+          @if (getPassword?.touched) {
+          <div class="mt-2 text-sm flex items-center gap-1" [ngClass]="{
+            'text-red-500': getPassword?.invalid,
+            'text-green-500': getPassword?.valid
+          }">
+            @if (getPassword?.invalid) {
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            @if (getPassword?.hasError('required')) {
+            Password is required
+            } @if (getPassword?.hasError('minlength')) {
+            Minimum 6 characters required
+            }
+            } @if (getPassword?.valid) {
+            <svg class="w-4 h-4 text-green-500 animate-[bounce_0.5s_ease-in-out]" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke-width="2" class="animate-[draw_0.5s_ease-in-out]" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 12l3 3 5-5"
+                class="animate-[draw_0.5s_ease-in-out]" />
+            </svg>
+            Password is valid
+            }
+          </div>
+          }
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" [disabled]="isLoading"
+          class="cursor-pointer w-full inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-800 hover:from-purple-700 hover:to-indigo-900 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed">
+          @if (isLoading) {
+          <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            </path>
+          </svg>
+          <span>Signing in...</span>
+          } @else {
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+          </svg>
+          <span>Continue to Dashboard</span>
+          }
+        </button>
+
+        <!-- Signup Link -->
+        <p class="text-center text-sm text-zinc-600 dark:text-zinc-400">
+          New here?
+          <a (click)="navigateToSignUp()"
+            class="text-purple-600 hover:text-purple-700 font-medium cursor-pointer hover:underline transition-colors">
+            Create an account
+          </a>
+        </p>
+      </form>
+    </div>
+  </div>
+</div>

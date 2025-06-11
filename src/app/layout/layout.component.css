@@ -1,0 +1,54 @@
+.alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 4px;
+    color: white;
+    font-weight: 500;
+    z-index: 1000;
+    animation: slideIn 0.3s ease-out;
+}
+
+.alert-error {
+    background-color: #dc3545;
+    box-shadow: 0 2px 5px rgba(220, 53, 69, 0.3);
+}
+
+.alert-success {
+    background-color: #28a745;
+    box-shadow: 0 2px 5px rgba(40, 167, 69, 0.3);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Prevent overflow on small screens */
+@media (max-width: 640px) {
+    .min-h-screen {
+        overflow-x: hidden;
+    }
+}
+
+/* Ensure content doesn't overflow on any screen size */
+:host {
+    display: block;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* Smooth transitions for sidebar */
+.transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+}

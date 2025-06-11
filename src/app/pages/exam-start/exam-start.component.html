@@ -1,0 +1,188 @@
+<div class="min-h-screen bg-gray-50 dark:bg-zinc-900 py-4 sm:py-8">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6">
+    @if (isLoading) {
+    <!-- Loading State -->
+    <div class="flex flex-col items-center justify-center p-4 sm:p-8 text-center">
+      <div class="relative w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-48 mb-4 sm:mb-6">
+        <div class="absolute inset-0 bg-purple-100 dark:bg-purple-900/30 rounded-full opacity-60 animate-pulse"></div>
+        <svg class="relative w-full h-full text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+      </div>
+      <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-zinc-900 dark:text-white mb-2">
+        Loading Exam...
+      </h3>
+      <p class="text-sm sm:text-base text-zinc-600 dark:text-zinc-400">
+        Please wait while we prepare your exam and questions.
+      </p>
+    </div>
+    } @else if (error || !exam || questions.length === 0) {
+    <!-- Error State -->
+    <div class="flex flex-col items-center justify-center p-4 sm:p-8 text-center">
+      <div class="relative w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-48 mb-4 sm:mb-6">
+        <div class="absolute inset-0 bg-red-100 dark:bg-red-900/30 rounded-full opacity-60"></div>
+        <svg class="relative w-full h-full text-red-500" fill="none" stroke="currentColor" viewBox="-3 -3 30 30">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+          </path>
+        </svg>
+      </div>
+      <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-zinc-900 dark:text-white mb-2">
+        {{ !exam ? "Exam Not Found" : "No Questions Available" }}
+      </h3>
+      <p class="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 mb-4 sm:mb-6">
+        {{
+        !exam
+        ? "The exam you're looking for doesn't exist or has been removed."
+        : "This exam has no questions available."
+        }}
+      </p>
+      <button (click)="navigateToExams()"
+        class="px-4 sm:px-6 py-2 sm:py-3 cursor-pointer bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors">
+        Back to Exams
+      </button>
+    </div>
+    } @else {
+    <!-- Exam Content -->
+    <div class="bg-white dark:bg-zinc-800 rounded-xl shadow-lg p-4 sm:p-6 mb-6 sm:mb-8">
+      <!-- Progress Bar -->
+      <div class="w-full h-2 bg-zinc-100 dark:bg-zinc-700 rounded-full mb-4 sm:mb-6 overflow-hidden">
+        <div class="h-full bg-purple-600 transition-all duration-1000 ease-linear" [style.width.%]="progressPercentage"
+          [class]="
+            progressPercentage < 25
+              ? 'bg-red-500'
+              : progressPercentage < 50
+              ? 'bg-orange-500'
+              : 'bg-purple-600'
+          "></div>
+      </div>
+
+      <!-- Header with Timer -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+        <div class="w-full sm:w-auto">
+          <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-zinc-900 dark:text-white">
+            {{ exam.title }}
+          </h1>
+          <p class="text-sm sm:text-base text-zinc-600 dark:text-zinc-400">
+            {{ exam.description }}
+          </p>
+          <p class="text-xs text-zinc-500 dark:text-zinc-500 mt-1">
+            {{ questions.length }} Questions
+          </p>
+        </div>
+        <div class="flex items-center space-x-3 sm:space-x-4 w-full sm:w-auto justify-between sm:justify-end">
+          <div class="text-right">
+            <p class="text-lg sm:text-xl md:text-2xl font-bold text-purple-600 dark:text-purple-400">
+              {{ formatTime() }}
+            </p>
+          </div>
+          <div class="bg-purple-100 dark:bg-purple-900 p-2 sm:p-3 rounded-full">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Question -->
+      <div class="mb-6 sm:mb-8">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-4 mb-4 sm:mb-6">
+          <h2 class="text-base sm:text-lg md:text-xl font-semibold text-zinc-900 dark:text-white">
+            Question {{ currentQuestionIndex + 1 }} of {{ questions.length }}
+          </h2>
+          <div class="flex items-center space-x-2">
+            <span class="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">Progress:</span>
+            <span class="text-xs sm:text-sm font-medium text-purple-600 dark:text-purple-400">
+              {{ currentQuestionIndex + 1 }}/{{ questions.length }}
+            </span>
+            <span class="text-xs text-zinc-400 dark:text-zinc-500">
+              ({{ questions[currentQuestionIndex].points }} pts)
+            </span>
+          </div>
+        </div>
+        <p class="text-sm sm:text-base md:text-lg text-zinc-700 dark:text-zinc-300 mb-4 sm:mb-6">
+          {{ questions[currentQuestionIndex].title }}
+        </p>
+        <div class="space-y-2 sm:space-y-3 md:space-y-4">
+          @for (option of questions[currentQuestionIndex].options; track $index)
+          {
+          <label [class]="
+              'flex items-center p-3 sm:p-4 rounded-lg border-2 cursor-pointer transition-colors ' +
+              (getCurrentQuestionAnswer() === $index
+                ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/30'
+                : 'border-zinc-200 dark:border-zinc-700 hover:border-purple-300 dark:hover:border-purple-700')
+            ">
+            <input type="radio" name="answer" [value]="$index" [checked]="getCurrentQuestionAnswer() === $index"
+              (change)="setCurrentQuestionAnswer($index)"
+              class="w-4 h-4 cursor-pointer text-purple-600 border-zinc-300 focus:ring-purple-500" />
+            <span class="ml-3 cursor-pointer text-sm sm:text-base text-zinc-700 dark:text-zinc-300">{{ option }}</span>
+          </label>
+          }
+        </div>
+      </div>
+
+      <!-- Navigation and Question Overview -->
+      <div class="mb-4 sm:mb-6">
+        <h3 class="text-xs sm:text-sm font-medium text-zinc-600 dark:text-zinc-400 mb-2 sm:mb-3">
+          Question Overview
+        </h3>
+        <div class="flex flex-wrap gap-1.5 sm:gap-2">
+          @for (question of questions; track $index) {
+          <button (click)="goToQuestion($index)" [class]="
+              'w-7 h-7 sm:w-8 sm:h-8 rounded-full text-xs font-medium transition-colors ' +
+              ($index === currentQuestionIndex
+                ? 'bg-purple-600 text-white'
+                : answers[question.id!] !== undefined
+                ? 'bg-green-100 cursor-pointer text-green-700 dark:bg-green-500/30 dark:text-green-400'
+                : 'bg-zinc-100 cursor-pointer text-zinc-600 dark:bg-zinc-700 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-600')
+            ">
+            {{ $index + 1 }}
+          </button>
+          }
+        </div>
+      </div>
+
+      <!-- Pagination Navigation -->
+      <div class="flex flex-col md:flex-row justify-between items-center gap-3 sm:gap-4">
+        <div class="flex items-center space-x-2 w-full sm:w-auto justify-center sm:justify-start">
+          <button (click)="goToQuestion(currentQuestionIndex - 1)" [disabled]="currentQuestionIndex === 0" [class]="
+              'px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors ' +
+              (currentQuestionIndex === 0
+                ? 'bg-zinc-100 text-zinc-400 cursor-not-allowed dark:bg-zinc-700 dark:text-zinc-500'
+                : 'bg-zinc-100 cursor-pointer text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-600')
+            ">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <span class="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
+            {{ currentQuestionIndex + 1 }} of {{ questions.length }}
+          </span>
+          <button (click)="goToQuestion(currentQuestionIndex + 1)"
+            [disabled]="currentQuestionIndex === questions.length - 1" [class]="
+              'px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors ' +
+              (currentQuestionIndex === questions.length - 1
+                ? 'bg-zinc-100 text-zinc-400 cursor-not-allowed dark:bg-zinc-700 dark:text-zinc-500'
+                : 'bg-zinc-100 cursor-pointer text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-600')
+            ">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="flex  items-center space-x-3 w-full sm:w-auto justify-center sm:justify-end">
+          <span class="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
+            Answered: {{ answeredCount }}/{{ questions.length }}
+          </span>
+          <button (click)="submitExam()" class="cursor-pointer" [class]="submitButtonClass"
+            *ngIf="currentQuestionIndex === questions.length - 1">
+            Submit Exam
+          </button>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</div>

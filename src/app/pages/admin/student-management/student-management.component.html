@@ -1,0 +1,258 @@
+<div class="min-h-screen bg-gray-50 dark:bg-zinc-900">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div>
+          <h1 class="text-3xl font-semibold text-gray-900 dark:text-white">Tolab Management</h1>
+          <p class="text-sm text-gray-600 dark:text-gray-400">
+            View and manage student information, track performance, and monitor progress.
+          </p>
+        </div>
+        <button (click)="refreshStudents()" [disabled]="loading"
+          class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-400 text-white font-medium rounded-lg transition-colors duration-200">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+            </path>
+          </svg>
+          {{ loading ? "Loading..." : "Refresh" }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <div class="mb-6">
+      <div class="flex flex-col lg:flex-row gap-4">
+        <div class="relative flex-grow">
+          <input type="text" [value]="searchTerm" (input)="handleSearch($event)"
+            placeholder="Search students by name or email..."
+            class="w-full sm:w-80 px-3 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white focus:ring-2 focus:ring-purple-600 focus:outline-none transition disabled:opacity-50 disabled:cursor-not-allowed" />
+        </div>
+        <select (change)="handleStatusChange($event)" [disabled]="loading"
+          class="w-full sm:w-56 px-4 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white focus:ring-2 focus:ring-purple-600 focus:outline-none transition disabled:opacity-50 disabled:cursor-not-allowed">
+          <option value="all">All Statuses</option>
+          <option value="excellent">Excellent</option>
+          <option value="good">Good</option>
+          <option value="needs_improvement">Needs Improvement</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    @if (loading) {
+      <div class="flex flex-col items-center justify-center p-12">
+      <div class="relative">
+        <div class="w-16 h-16 border-4 border-purple-200 dark:border-purple-800 rounded-full animate-spin"></div>
+        <div
+          class="absolute top-0 left-0 w-16 h-16 border-4 border-purple-600 border-t-transparent rounded-full animate-spin">
+        </div>
+      </div>
+      <p class="mt-4 text-lg text-zinc-600 dark:text-zinc-400">
+        Loading tolab...
+      </p>
+    </div>
+    }
+
+    <!-- Error State -->
+    @if (error) {
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
+      <span class="block sm:inline">{{ error }}</span>
+    </div>
+    }
+
+    <!-- Students List -->
+    @if (!loading && !error) {
+    <div
+      class="bg-white dark:bg-zinc-800 shadow-lg rounded-xl overflow-hidden border border-gray-100 dark:border-zinc-700">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-zinc-700">
+          <thead class="bg-gray-50 dark:bg-zinc-900">
+            <tr>
+              <th scope="col"
+                class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Student
+              </th>
+              <th scope="col"
+                class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Total Exams
+              </th>
+              <th scope="col"
+                class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Pass Rate
+              </th>
+              <th scope="col"
+                class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Average Score
+              </th>
+              <th scope="col"
+                class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Status
+              </th>
+              <th scope="col"
+                class="px-6 py-4 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white dark:bg-zinc-800 divide-y divide-gray-200 dark:divide-zinc-700">
+            @for (student of pagedStudents; track student.id) {
+            <tr class="hover:bg-gray-50 dark:hover:bg-zinc-700/50 transition-colors duration-200">
+              <td class="px-6 py-5 whitespace-nowrap">
+                <div class="flex items-center space-x-4">
+                  <div class="flex-shrink-0">
+                    <div
+                      class="h-12 w-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 dark:from-purple-600 dark:to-blue-700 flex items-center justify-center shadow-sm">
+                      <span class="text-white font-semibold text-lg">
+                        {{ student.name.charAt(0).toUpperCase() }}
+                      </span>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="text-sm font-medium text-gray-900 dark:text-white">
+                      {{ student.name }}
+                    </div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400">
+                      {{ student.email }}
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-5 whitespace-nowrap">
+                <div class="text-sm text-gray-900 dark:text-white font-medium">
+                  {{ student.examResults.totalExams }}
+                </div>
+              </td>
+              <td class="px-6 py-5 whitespace-nowrap">
+                <div class="text-sm text-gray-900 dark:text-white font-medium">
+                  {{ getPassRate(student) | number:'1.0-1' }}%
+                </div>
+              </td>
+              <td class="px-6 py-5 whitespace-nowrap">
+                <div class="text-sm text-gray-900 dark:text-white font-medium">
+                  {{ student.examResults.averageScore | number:'1.0-1' }}%
+                </div>
+              </td>
+              <td class="px-6 py-5 whitespace-nowrap">
+                <span [class]="getStatusColor(student.examResults.averageScore) + ' px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-opacity-10' + 
+                      (student.examResults.averageScore >= 70 ? ' bg-green-100 dark:bg-green-900/30' : 
+                       student.examResults.averageScore >= 50 ? ' bg-yellow-100 dark:bg-yellow-900/30' : 
+                       ' bg-red-100 dark:bg-red-900/30')">
+                  {{ student.examResults.averageScore >= 70 ? 'Excellent' :
+                  student.examResults.averageScore >= 50 ? 'Good' : 'Needs Improvement' }}
+                </span>
+              </td>
+              <td class="px-6 py-5 whitespace-nowrap text-right text-sm font-medium">
+                <button (click)="confirmDelete(student)"
+                  class="cursor-pointer inline-flex items-center px-3 py-2 text-sm font-medium text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 transition-colors duration-200 hover:bg-red-50 dark:hover:bg-red-900/50 rounded-lg">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1.5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  Delete
+                </button>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      @if (totalPages > 1) {
+      <div class="px-6 py-4 flex items-center justify-between border-t border-gray-200 dark:border-zinc-700">
+        <div class="flex-1 flex justify-between sm:hidden">
+          <button (click)="previousPage()" [disabled]="currentPage === 1"
+            class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-zinc-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed">
+            Previous
+          </button>
+          <button (click)="nextPage()" [disabled]="currentPage === totalPages"
+            class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-zinc-600 text-sm font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed">
+            Next
+          </button>
+        </div>
+        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+          <div>
+            <p class="text-sm text-gray-700 dark:text-gray-300">
+              Showing
+              <span class="font-medium">{{ (currentPage - 1) * itemsPerPage + 1 }}</span>
+              to
+              <span class="font-medium">{{ currentPage * itemsPerPage > filteredStudents.length ?
+                filteredStudents.length : currentPage * itemsPerPage }}</span>
+              of
+              <span class="font-medium">{{ filteredStudents.length }}</span>
+              results
+            </p>
+          </div>
+          <div>
+            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+              <button (click)="previousPage()" [disabled]="currentPage === 1"
+                class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                <span class="sr-only">Previous</span>
+                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                  aria-hidden="true">
+                  <path fill-rule="evenodd"
+                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                    clip-rule="evenodd" />
+                </svg>
+              </button>
+              @for (page of getPageNumbers(); track page) {
+              <button (click)="goToPage(page)"
+                [class]="(page === currentPage ? 'z-10 bg-purple-50 dark:bg-purple-900/30 border-purple-500 dark:border-purple-500 text-purple-600 dark:text-purple-300' : 'bg-white dark:bg-zinc-800 border-gray-300 dark:border-zinc-600 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-zinc-700') + ' relative inline-flex items-center px-4 py-2 border text-sm font-medium'">
+                {{ page }}
+              </button>
+              }
+              <button (click)="nextPage()" [disabled]="currentPage === totalPages"
+                class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                <span class="sr-only">Next</span>
+                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                  aria-hidden="true">
+                  <path fill-rule="evenodd"
+                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                    clip-rule="evenodd" />
+                </svg>
+              </button>
+            </nav>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    @if (showDeleteModal && studentToDelete) {
+    <app-confirm-modal [isOpen]="showDeleteModal" [isLoading]="isDeleting" (confirm)="deleteStudent()"
+      (cancel)="cancelDelete()" title="Delete Student"
+      message="Are you sure you want to delete {{ studentToDelete.name }}? This action cannot be undone and will delete all associated exam results and data."
+      confirmText="Delete" cancelText="Cancel">
+    </app-confirm-modal>
+    }
+
+    <!-- Empty State -->
+    @if (filteredStudents.length === 0) {
+    <div class="flex flex-col items-center justify-center p-6 text-center">
+      <div class="bg-purple-50 dark:bg-purple-900/20 rounded-full p-4 mb-2">
+        <svg class="mx-auto h-12 w-12 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+      </div>
+      <h3 class="text-2xl font-medium text-gray-800 dark:text-white">
+        No students found</h3>
+      <p class="text-zinc-500 dark:text-zinc-400 mb-3">
+        Try adjusting your search or filter to find what you're looking for.
+      </p>
+      <div class="flex space-x-4">
+        <div class="w-3 h-3 bg-indigo-200 dark:bg-purple-800 rounded-full animate-bounce" style="animation-delay: 0.1s">
+        </div>
+        <div class="w-3 h-3 bg-indigo-300 dark:bg-purple-700 rounded-full animate-bounce" style="animation-delay: 0.2s">
+        </div>
+        <div class="w-3 h-3 bg-indigo-400 dark:bg-purple-600 rounded-full animate-bounce" style="animation-delay: 0.3s">
+        </div>
+      </div>
+    </div>
+    }
+    }
+  </div>
+</div>

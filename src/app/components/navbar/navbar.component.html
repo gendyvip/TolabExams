@@ -1,0 +1,154 @@
+<nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-zinc-900 dark:border-gray-700">
+  <!-- Alert Container -->
+  <div *ngIf="showLogoutAlert"
+    class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm transition-all duration-300">
+    <div
+      class="bg-white dark:bg-zinc-800 rounded-2xl p-6 shadow-2xl max-w-md w-full mx-4 transform transition-all duration-300 scale-100">
+      <!-- Alert Header -->
+      <div class="flex items-center gap-4 mb-4">
+        <div class="bg-red-100 dark:bg-red-900/20 p-3 rounded-full">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="h-6 w-6 text-red-600 dark:text-red-400">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" x2="9" y1="12" y2="12"></line>
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Confirm Logout</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Are you sure you want to log out?</p>
+        </div>
+      </div>
+
+      <!-- Alert Actions -->
+      <div class="flex gap-3 justify-end">
+        <button (click)="cancelLogout()"
+          class="cursor-pointer px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 dark:bg-zinc-700 dark:text-gray-300 dark:hover:bg-zinc-600 rounded-lg transition-colors duration-200">
+          Cancel
+        </button>
+        <button (click)="confirmLogout()"
+          class="cursor-pointer px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 rounded-lg transition-colors duration-200">
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="px-3 py-3 lg:px-5 lg:pl-3">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center justify-start rtl:justify-end">
+        <button (click)="onToggle()" type="button"
+          class="inline-flex items-center cursor-pointer p-2 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-zinc-900 dark:focus:ring-gray-600">
+          <span class="sr-only">Open sidebar</span>
+          <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+            <path clip-rule="evenodd" fill-rule="evenodd"
+              d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z">
+            </path>
+          </svg>
+        </button>
+        <a [routerLink]="
+            queryPath === 'student'
+              ? ['/student', 'dashboard']
+              : ['/teacher', 'dashboard']" class="flex ms-2 md:me-24">
+          <img src="logo.png" class="h-13 me-2" alt="TolabExams Logo" />
+          <span class="self-center mt-2 text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">TolabExams</span>
+        </a>
+      </div>
+      <div class="flex items-center">
+        <div class="flex items-center ms-3">
+          <div>
+            <button type="button"
+              class="flex text-sm bg-zinc-900 rounded-full cursor-pointer focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+              id="user-menu-button" aria-expanded="false" (click)="toggleDropdown()">
+              <span class="sr-only">Open user menu</span>
+              <img [src]="getAvatarUrl()" alt="Profile" class="rounded-full w-8 h-8 object-cover" />
+            </button>
+          </div>
+          <div #dropdown
+            class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-lg dark:bg-zinc-800 dark:divide-gray-600 absolute right-0 top-12 w-48"
+            id="user-dropdown">
+            <div class="px-4 py-3" role="none">
+              <p class="text-sm flex justify-center text-gray-900 dark:text-white" role="none">
+                <svg class="w-6 h-6 me-2 text-gray-800 dark:text-white" aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a8.949 8.949 0 0 0 4.951-1.488A3.987 3.987 0 0 0 13 16h-2a3.987 3.987 0 0 0-3.951 3.512A8.948 8.948 0 0 0 12 21Zm3-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                </svg>
+                {{ userDetails.name }}
+              </p>
+            </div>
+            <ul class="py-1" role="none">
+              <li>
+                <a (click)="onRouting()" [routerLink]="
+            queryPath === 'student'
+              ? ['/student', 'dashboard']
+              : ['/teacher', 'dashboard']"
+                  class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-zinc-900 dark:hover:text-white transition-colors duration-200"
+                  role="menuitem">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="h-4 w-4 mr-2">
+                    <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path>
+                    <path
+                      d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z">
+                    </path>
+                  </svg>
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a (click)="onRouting()" [routerLink]="
+            queryPath === 'student'
+              ? ['/student', 'settings']
+              : ['/teacher', 'settings']"
+                  class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-zinc-900 dark:hover:text-white transition-colors duration-200"
+                  role="menuitem">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="h-4 w-4 mr-2">
+                    <path
+                      d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z">
+                    </path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                  Settings
+                </a>
+              </li>
+              <li>
+                <a (click)="onRouting()" [routerLink]="
+            queryPath === 'student'
+              ? ['/student', 'results']
+              : ['/teacher', 'tolab','results']"
+                  class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-zinc-900 dark:hover:text-white transition-colors duration-200"
+                  role="menuitem">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="h-4 w-4 mr-2">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  Results
+                </a>
+              </li>
+              <li>
+                <a (click)="handleLogout()"
+                  class="cursor-pointer flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-zinc-900 dark:hover:text-white  transition-colors duration-200"
+                  role="menuitem">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="h-4 w-4 mr-2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" x2="9" y1="12" y2="12"></line>
+                  </svg>
+                  Sign out
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

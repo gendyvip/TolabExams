@@ -1,0 +1,70 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <!-- Header Section -->
+    <div class="mb-4">
+      <h1 class="text-3xl font-semibold text-gray-900 dark:text-white">Help Center</h1>
+      <p class="text-lg text-gray-600 dark:text-gray-400 mt-2">
+        Find answers to common questions about taking exams, understanding results, and resolving technical issues.
+      </p>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="mb-8">
+      <div class="relative max-w-xl">
+        <input
+          type="text"
+          placeholder="Search for help..."
+          class="w-full px-4 py-3 pl-12 text-gray-900 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white"
+        />
+        <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+          <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="flex flex-wrap gap-4 mb-8">
+      @for (category of categories; track category) {
+        <button
+          (click)="setCategory(category)"
+          [class]="'px-6 py-3 rounded-lg text-sm font-medium transition-colors duration-200 ' + 
+            (selectedCategory === category 
+              ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30' 
+              : 'bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-700')"
+        >
+          {{ category }}
+        </button>
+      }
+    </div>
+
+    <!-- FAQ List -->
+    <div class="space-y-4">
+      @for (faq of getFilteredFAQs(); track faq.question) {
+        <div class="bg-white dark:bg-zinc-800 rounded-lg shadow-sm border border-gray-100 dark:border-zinc-700 overflow-hidden hover:shadow-md transition-shadow duration-200">
+          <div class="p-6">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+              {{ faq.question }}
+            </h3>
+            <p class="text-gray-600 dark:text-gray-400 leading-relaxed">
+              {{ faq.answer }}
+            </p>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Contact Support -->
+    <div class="mt-12">
+      <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Still Need Help?</h2>
+      <p class="text-gray-600 dark:text-gray-400 mb-6">
+        Can't find what you're looking for? Our support team is here to help.
+      </p>
+      <button class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors duration-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+        <a href="mailto:support&#64;tolabtest.com">Contact Support</a>
+      </button>
+    </div>
+  </div>
